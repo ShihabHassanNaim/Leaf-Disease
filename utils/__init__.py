@@ -1,0 +1,1 @@
+"""Utility package for the Chilli Leaf Disease Classification project."""

@@ -1,0 +1,108 @@
+﻿# =====================================================================
+# Chilli Leaf Disease Classification - DINOv2-small + LoRA
+# Central configuration (Windows / CPU-friendly)
+# =====================================================================
+
+# ---------- Reproducibility ----------
+seed: 42
+deterministic: true
+benchmark: false
+
+# ---------- Paths (Windows) ----------
+paths:
+  dataset_dir: "E:/Peer Research Lab/Main work /project/Chilli Leaf Disease Image Dataset for Classificati/Chilli Leaf Disease Image Dataset for Classificati"
+  project_root: "E:/Peer Research Lab/Main work /project"
+  outputs_dir: "outputs"
+  checkpoints_dir: "checkpoints"
+  logs_dir: "logs"
+  metrics_dir: "outputs/metrics"
+  confusion_matrix_dir: "outputs/confusion_matrices"
+  gradcam_dir: "outputs/gradcam_heatmaps"
+
+# ---------- Class labels ----------
+classes:
+  - "Bacterial_Spot"
+  - "Cercospora_Leaf_Spot"
+  - "Curl_Virus"
+  - "Healthy_Leaf"
+  - "Nutrition_Deficiency"
+  - "Powdery_Mildew"
+num_classes: 6
+
+# ---------- Dataset / Splits ----------
+dataset:
+  image_size: 224
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  recursive: true
+  valid_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".JPG"
+    - ".JPEG"
+    - ".PNG"
+
+# ---------- Model ----------
+model:
+  backbone_name: "facebook/dinov2-small"
+  cache_dir: "E:/Peer Research Lab/Main work /project/checkpoints/hf_cache"
+  freeze_backbone: true
+  image_size: 224
+
+# ---------- LoRA (PEFT) ----------
+lora:
+  enabled: true
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  bias: "none"
+  target_modules:
+    - "query"
+    - "value"
+    - "dense"
+
+# ---------- Training ----------
+training:
+  epochs: 5
+  batch_size: 8
+  num_workers: 0
+  pin_memory: false
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+  warmup_epochs: 1
+  grad_clip_max_norm: 1.0
+  mixed_precision: false
+  amp_dtype: "fp16"
+  gradient_accumulation_steps: 1
+  early_stopping:
+    enabled: true
+    patience: 3
+    min_delta: 1.0e-4
+  weighted_loss: false
+  resume_from_checkpoint: null
+  save_every_epoch: true
+
+# ---------- Scheduler ----------
+scheduler:
+  type: "cosine"
+  t_max: 5
+  eta_min: 1.0e-6
+
+# ---------- Evaluation / Inference ----------
+evaluation:
+  batch_size: 16
+  num_workers: 0
+
+inference:
+  default_image_size: 224
+
+# ---------- Logging ----------
+logging:
+  level: "INFO"
+  log_file: "logs/training.log"
+  log_to_console: true
+
+
